@@ -2,11 +2,15 @@ from rest_framework import serializers
 from .models import *
 
 
+
 class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model= User
+        model= Student
         fields= "__all__"
+        depth=2
+
+
 
 class PastTestListSerializer(serializers.ModelSerializer):
 
@@ -34,4 +38,3 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model= Questions
         fields = '_all'
-        depth= 2
