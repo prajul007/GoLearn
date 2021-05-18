@@ -16,6 +16,11 @@ class CreateUserProfileSerializer(serializers.ModelSerializer):
         model= Student
         fields= "__all__"
 
+class QuestionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model= Questions
+        fields = "__all__"
 
 class PastTestListSerializer(serializers.ModelSerializer):
 
@@ -25,11 +30,11 @@ class PastTestListSerializer(serializers.ModelSerializer):
         depth= 2
 
 class PastTestSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(read_only=True, many=True)
 
     class Meta:
         model= Test
-        fields = '_all'
-        depth= 2
+        fields = '__all__'
 
 class SavedQuestionSerializer(serializers.ModelSerializer):
 
@@ -38,8 +43,3 @@ class SavedQuestionSerializer(serializers.ModelSerializer):
         fields = ["question"]
         depth= 2
 
-class QuestionSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model= Questions
-        fields = '_all'
