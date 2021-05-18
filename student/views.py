@@ -113,12 +113,26 @@ class StartTest(APIView):
                 print(s[0][7:], s[1][6:])
                 qye  = Questions.objects.create(question_desc=s[0][7:], answer=s[1][6:])
                 qye.save()
+                test.questions.add(qye)
                 print()
             except Exception:
                 print()
-        ## Append Question on test obj
-
-        return Response({"id":test.id},status=200)
+        l = []
+        ques = test.questions.all()
+        for i in ques:
+            d = {}
+            d["questionText"] = i.question_desc
+            d["contestId"] = test.id
+            d["id"] = i.id
+            m = []
+            m.append(i.choice1)
+            m.append(i.choice2)
+            m.append(i.choice3)
+            m.append(i.choice4)
+            d["options"] = m
+            d['answer'] = i.answer
+            l.append(d)
+        return Response(l, status=200)
 
 
 class GetTest(RetrieveUpdateAPIView):
