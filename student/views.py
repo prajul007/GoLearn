@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework.generics import *
+from rest_framework import generics
 from rest_framework.filters import SearchFilter,OrderingFilter
 from .models import *
 from django.db import IntegrityError
@@ -10,21 +11,16 @@ from .serializers import *
 from django.core.exceptions import ObjectDoesNotExist
 
 
-class CreateUser(CreateAPIView):
+class CreateUser(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserProfileSerializer
+    serializer_class = CreateUserProfileSerializer
 
-    def create(self, request):
-        try:
-            user = User.objects.create_user(username=request.data['phone'], password=request.data['password'], email = request.data['email'])
-        except IntegrityError:
-            return Response({"USER_EXISTS": "User already exists with this phone number"}, status=400)
-        request.data['user'] = user.id
+    def create(self,request,*args,**kwargs):
+        print(request.user)
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=200)
 
 class UserProfile(RetrieveUpdateAPIView):
 
@@ -40,6 +36,7 @@ class UserProfile(RetrieveUpdateAPIView):
 
 
     def partial_update(self, request,*args,**kwargs):
+
         user = self.queryset.get(user=request.user)
         serializer = self.get_serializer(user,data=request.data,partial=True)
         serializer.is_valid(raise_exception=True)

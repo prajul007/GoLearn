@@ -10,6 +10,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields= "__all__"
         depth=2
 
+class CreateUserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model= Student
+        fields= "__all__"
 
 
 class PastTestListSerializer(serializers.ModelSerializer):
