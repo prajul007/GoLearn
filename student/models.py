@@ -32,7 +32,7 @@ class Test(models.Model):
     date=models.DateField(auto_now=True)
     totalmarks = models.PositiveIntegerField(default=0)
     marksscored = models.PositiveIntegerField(default=0)
-    user = models.OneToOneField('Student',on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
     file = models.FileField(null=True,blank=True)
     perquestime = models.PositiveIntegerField(default=60)
     text = models.TextField(default=" ")
