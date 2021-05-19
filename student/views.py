@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework.generics import *
 from rest_framework import generics
+import json
 from rest_framework.filters import SearchFilter,OrderingFilter
 from .models import *
 from django.db import IntegrityError
@@ -18,10 +19,14 @@ import json
 class CreateUser(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = CreateUserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def create(self,request,*args,**kwargs):
-        print(request.user)
-        serializer = self.get_serializer(data=request.data)
+        # print("Hii" + request.user.username)
+        request.data._mutable = True
+        request.data['user'] = request.user.id
+        request.data._mutable = False
+        serializer = CreateUserProfileSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=200)
