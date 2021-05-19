@@ -51,6 +51,7 @@ SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -149,5 +150,8 @@ USE_TZ = True
 # AUTH_USER_MODEL = "student.User"
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000
 
 WSGI_APPLICATION = 'golearn.wsgi.application'
