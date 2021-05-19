@@ -21,5 +21,3 @@ venv.bak/
 # pyenv
 .python-version
 *.json
-
-db.sqlite3
