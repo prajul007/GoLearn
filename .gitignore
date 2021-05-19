@@ -22,4 +22,3 @@ venv.bak/
 .python-version
 *.json
 
-db.sqlite3
