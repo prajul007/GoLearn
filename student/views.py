@@ -19,13 +19,13 @@ import json
 class CreateUser(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = CreateUserProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def create(self,request,*args,**kwargs):
-        # print("Hii" + request.user.username)
-        request.data._mutable = True
-        request.data['user'] = request.user.id
-        request.data._mutable = False
+        try:
+            user = User.objects.create_user(username=request.data['phone'],password=request.data['password'],email=request.data['email'])
+        except IntegrityError:
+            return Response({"USER_EXISTS":"User already exists with this phone number"},status=400)
+        request.data['user'] = user.id
         serializer = CreateUserProfileSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
