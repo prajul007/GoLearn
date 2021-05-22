@@ -11,7 +11,7 @@ from django.db import IntegrityError
 from .serializers import *
 from django.core.exceptions import ObjectDoesNotExist
 
-
+import random
 import requests
 import json
 
@@ -107,21 +107,66 @@ class StartTest(APIView):
             'x-rapidapi-host': "question-generator.p.rapidapi.com"
             }
 
-
+        # preprocess()
+        # return Response({"yeyeeye"}, status=200)
         response = requests.request("GET", url, headers=headers, params=querystring)
         print(response.text)
         quest = response.text.split('Question')
-        
+        qna = []
+        ans = []
         for q in quest:
             try:
                 s = q.split('Answer')
                 print(s[0][7:], s[1][6:])
-                qye  = Questions.objects.create(question_desc=s[0][7:], answer=s[1][6:])
-                qye.save()
-                test.questions.add(qye)
+                qna.append((s[0][7:], s[1][2:]))
+                ans.append(s[1][2:])
+                # qye  = Questions.objects.create(question_desc=s[0][7:], answer=s[1][6:])
+                # qye.save()
+                # test.questions.add(qye)
                 print()
             except Exception:
                 print()
+
+        for q,a in qna:
+            t = []
+            t.append(a)
+            # ans.remove(a)
+
+            n = random.randint(0,len(ans)-1)
+            t.append(ans[n])
+            # ans.remove(ans[n])
+
+            n = random.randint(0,len(ans)-1)
+            t.append(ans[n])
+            # ans.remove(ans[n])
+
+            n = random.randint(0,len(ans)-1)
+            t.append(ans[n])
+            # ans.remove(ans[n])
+
+            m = random.randint(0,len(t)-1)
+            c1 = t[m]
+            t.remove(t[m])
+
+            m = random.randint(0,len(t)-1)
+            c2 = t[m]
+            t.remove(t[m])
+
+            m = random.randint(0,len(t)-1)
+            c3 = t[m]
+            t.remove(t[m])
+
+            m = random.randint(0,len(t)-1)
+            c4 = t[m]
+            t.remove(t[m])
+
+            print(c1, c2, c3, c4, a)
+
+            qye  = Questions.objects.create(question_desc=q, answer=a, choice1=c1, choice2=c2, choice3=c3, choice4=c4)
+            qye.save() 
+            test.questions.add(qye)           
+
+        
         l = []
         ques = test.questions.all()
         for i in ques:
@@ -207,12 +252,66 @@ def preprocess():
 
     quest = res.split('Question')
     
-    for q in quest:
-        try:
-            s = q.split('Answer')
-            print(s[0][7:], s[1][6:])
-            qye  = Questions.objects.create(question_desc=s[0][7:], answer=s[1][6:])
-            qye.save()
-            print()
-        except Exception:
-            print()
+    # for q in quest:
+    #     try:
+    #         s = q.split('Answer')
+    #         print(s[0][7:], s[1][6:])
+    #         qye  = Questions.objects.create(question_desc=s[0][7:], answer=s[1][6:])
+    #         qye.save()
+    #         print()
+    #     except Exception:
+    #         print()
+
+        # qna = []
+        # ans = []
+        # for q in quest:
+        #     try:
+        #         s = q.split('Answer')
+        #         print(s[0][7:], s[1][6:])
+        #         qna.append((s[0][7:], s[1][6:]))
+        #         ans.append(s[1][6:])
+        #         # qye  = Questions.objects.create(question_desc=s[0][7:], answer=s[1][6:])
+        #         # qye.save()
+        #         # test.questions.add(qye)
+        #         print()
+        #     except Exception:
+        #         print()
+
+        # for q,a in qna:
+        #     t = []
+        #     t.append(a)
+        #     # ans.remove(a)
+
+        #     n = random.randint(0,len(ans)-1)
+        #     t.append(ans[n])
+        #     # ans.remove(ans[n])
+
+        #     n = random.randint(0,len(ans)-1)
+        #     t.append(ans[n])
+        #     # ans.remove(ans[n])
+
+        #     n = random.randint(0,len(ans)-1)
+        #     t.append(ans[n])
+        #     # ans.remove(ans[n])
+
+        #     m = random.randint(0,len(t)-1)
+        #     c1 = t[m]
+        #     t.remove(t[m])
+
+        #     m = random.randint(0,len(t)-1)
+        #     c2 = t[m]
+        #     t.remove(t[m])
+
+        #     m = random.randint(0,len(t)-1)
+        #     c3 = t[m]
+        #     t.remove(t[m])
+
+        #     m = random.randint(0,len(t)-1)
+        #     c4 = t[m]
+        #     t.remove(t[m])
+
+        #     print(c1, c2, c3, c4, a)
+
+        #     qye  = Questions.objects.create(question_desc=q, answer=a, choice1=c1, choice2=c2, choice2=c3, choice4=c4)
+        #     qye.save() 
+        #     test.questions.append(q)           
