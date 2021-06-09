@@ -22,7 +22,7 @@ class CreateUser(generics.CreateAPIView):
 
     def create(self,request,*args,**kwargs):
         try:
-            user = User.objects.create_user(username=request.data['phone'],password=request.data['password'],email=request.data['email'])
+            user = User.objects.create_user(username=request.data[''],password=request.data['password'],email=request.data['email'])
         except IntegrityError:
             return Response({"USER_EXISTS":"User already exists with this phone number"},status=400)
         request.data['user'] = user.id
@@ -202,10 +202,10 @@ class GetTest(RetrieveUpdateAPIView):
             instance = self.queryset.get(id=kwargs["id"])
         except ObjectDoesNotExist:
             return Response({"error": "Does not exist"}, status=404)
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=200)
+        instance.totalmarks=10
+        instance.marksscored=request.data["marks"]
+        instance.save()
+        return Response("Done", status=200)
 
 def preprocess():
     res = '''
