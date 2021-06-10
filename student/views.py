@@ -99,8 +99,11 @@ class StartTest(APIView):
         test = Test.objects.create(topic=topic,user=request.user,text=request.data['text'],perquestime =request.data['perquestion'])
 
         url = "https://question-generator.p.rapidapi.com/"
+        image1=cv2.imdecode(numpy.fromstring(request.data['img'].read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
+        img = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+        ImageToText(img)
 
-        querystring = {"text":request.data['text'],"nbr":"10"}
+        querystring = {"text":str(ImageToText(img)),"nbr":"10"}
 
         headers = {
             'x-rapidapi-key': "38f45be352msh9c4b087a7f500d2p1db096jsn045d2b9d0d4a",
@@ -315,3 +318,21 @@ def preprocess():
         #     qye  = Questions.objects.create(question_desc=q, answer=a, choice1=c1, choice2=c2, choice2=c3, choice4=c4)
         #     qye.save() 
         #     test.questions.append(q)           
+import cv2
+import pytesseract
+
+import numpy
+class TestI(APIView):
+    def post(self, request):
+        # print(request.data['img'])
+        image1=cv2.imdecode(numpy.fromstring(request.data['img'].read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
+        img = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+        print(img)
+        passage = pytesseract.image_to_string(img)
+        print(passage)
+        return Response({"msg":"yeyeye"})
+
+def ImageToText(img):
+	passage = pytesseract.image_to_string(img)
+	return passage
+

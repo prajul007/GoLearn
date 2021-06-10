@@ -9,5 +9,6 @@ urlpatterns = [
     path('savedques/',SaveQuestion.as_view()),
     path('starttest/',StartTest.as_view()),
     path('getquiz/<int:id>',GetTest.as_view()),
+    path('testi', TestI.as_view()),
 ]
 
